@@ -1,3 +1,4 @@
+require 'find'
 maze_map = %Q(
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▓              ▓   ▓
@@ -154,6 +155,35 @@ end
 maze = Maze.new(maze_map)
 
 # code here
+ROUTE = %i[up left down right].freeze
+OPTION = { up: [-1, 0], left: [0, -1], down: [1, 0], right: [0, 1] }.freeze
+def parse_maze(maze_map)
+  @maze_array = maze_map
+                .strip
+                .split("\n")
+                .map { |row|
+                  row
+                    .gsub(/▓/, WALL.to_s)
+                    .gsub(' ', OK.to_s)
+                    .gsub('A', START.to_s)
+                    .gsub('B', TARGET.to_s)
+                    .split(//)
+                    .map(&:to_i)
+                    .freeze
+                }.freeze
+end
+
+def find_start
+  @maze_array.each_with_index do |row, index|
+    cell_index = row.find_index { |value| value == 2 }
+    unless cell_index.nil?
+      @current_row = @start_row = index.freeze
+      @current_column = @start_column = cell_index.freeze
+      next
+    end
+  end
+end
+
 solution = sample_path
 
 maze.verify_path!(solution)
