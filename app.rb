@@ -151,11 +151,157 @@ class Maze
   end
 end
 
-maze = Maze.new(maze_map)
+# maze = Maze.new(maze_map)
 
 # code here
+# class for search path from start target to end target at maze
+class SamplePath
+  ROUTE = %i[down left up right].freeze
+  OPTION = { down: [1, 0], left: [0, -1], up: [-1, 0], right: [0, 1] }.freeze
+  { up: [-1, 0], left: [0, -1], down: [1, 0], right: [0, 1] }.freeze
+  OK = 0
+  WALL = 1
+  START = 2
+  TARGET = 3
 
-solution = sample_path
+  def initialize(maze_map)
+    @maze_array = parse_maze(maze_map)
+    @sample_path = []
+  end
 
+  def find_path
+    find_targets
+    loop do
+      if @current_row < @target_row
+        cell = move(:down)
+        break if cell == TARGET
+        get_round_wall(:down) if cell == WALL
+      elsif @current_row > @target_row
+        cell = move(:up)
+        break if cell == TARGET
+        get_round_wall(:up) if cell == WALL
+      end
+      if @current_column < @target_column
+        cell = move(:right)
+        break if cell == TARGET
+        get_round_wall(:right) if cell == WALL
+      elsif @current_column > @target_column
+        cell = move(:left)
+        break if cell == TARGET
+        get_round_wall(:left) if cell == WALL
+      end
+    end
+    @sample_path
+  end
+
+  private
+
+  def parse_maze(maze_map)
+    maze_map
+        .strip
+        .split("\n")
+        .map { |row|
+          row
+              .gsub(/▓/, WALL.to_s)
+              .gsub(' ', OK.to_s)
+              .gsub('A', START.to_s)
+              .gsub('B', TARGET.to_s)
+              .split(//)
+              .map(&:to_i)
+              .freeze
+        }.freeze
+  end
+
+  def move(direction)
+    next_row = @current_row + OPTION[direction][0]
+    next_column = @current_column + OPTION[direction][1]
+    cell = @maze_array[next_row][next_column]
+    return cell if cell == WALL
+    @sample_path << direction
+    @current_row = next_row
+    @current_column = next_column
+    cell
+  end
+
+  def find_targets
+    @maze_array.each_with_index do |row, row_index|
+      cell_index = row.find_index { |value| value == START }
+      unless cell_index.nil?
+        @current_row = @start_row = row_index.freeze
+        @current_column = @start_column = cell_index.freeze
+      end
+      cell_index = row.find_index { |value| value == TARGET }
+      unless cell_index.nil?
+        @target_row = row_index.freeze
+        @target_column = cell_index.freeze
+      end
+    end
+  end
+
+  def get_round_wall(direction)
+    index = ROUTE.find_index { |i| i == direction }
+    wall_row = @current_row + OPTION[direction][0]
+    wall_column = @current_column + OPTION[direction][1]
+    loop do
+      cell = move(ROUTE[(index + 1) % 4])
+      # move(ROUTE[index])
+      if cell == WALL
+        inside_wall_row = @current_row + OPTION[ROUTE[(index + 1) % 4]][0]
+        inside_wall_column = @current_column + OPTION[ROUTE[(index + 1) % 4]][1]
+        @foooo = @foooo || inside_wall_row
+        @baaar = @baaar || inside_wall_column
+        loop do
+          inside_cell = move(ROUTE[(index + 2) % 4])
+          # move(ROUTE[(index + 1) % 4])
+          if inside_cell == WALL
+            double_inside_wall_row = @current_row + OPTION[ROUTE[(index + 2) % 4]][0]
+            double_inside_wall_column = @current_column + OPTION[ROUTE[(index + 2) % 4]][1]
+            @fooo = @fooo || double_inside_wall_row
+            @baar = @baar || double_inside_wall_column
+            loop do
+              double_inside_cell = move(ROUTE[(index + 3) % 4])
+              # move(ROUTE[(index + 2) % 4])
+              if double_inside_cell == WALL
+                thrice_inside_wall_row = @current_row + OPTION[ROUTE[(index + 3) % 4]][0]
+                thrice_inside_wall_column = @current_column + OPTION[ROUTE[(index + 3) % 4]][1]
+                @foo = @foo || thrice_inside_wall_row
+                @bar = @bar || thrice_inside_wall_column
+                loop do
+                  thrice_inside_cell = move(ROUTE[index])
+                  if thrice_inside_cell == OK
+                    double_inside_wall_row += OPTION[ROUTE[index]][0]
+                    double_inside_wall_column += OPTION[ROUTE[index]][1]
+                  end
+                  move(ROUTE[(index + 3) % 4])
+                  break if @current_row == thrice_inside_wall_row || @current_column == thrice_inside_wall_column
+                end
+              elsif double_inside_cell == OK
+                inside_wall_row += OPTION[ROUTE[(index + 3) % 4]][0]
+                inside_wall_column += OPTION[ROUTE[(index + 3) % 4]][1]
+              end
+              move(ROUTE[(index + 2) % 4])
+              break if @current_row == double_inside_wall_row || @current_column == double_inside_wall_column
+            end
+          elsif inside_cell == OK
+            wall_row += OPTION[ROUTE[(index + 2) % 4]][0]
+            wall_column += OPTION[ROUTE[(index + 2) % 4]][1]
+          end
+          move(ROUTE[(index + 1) % 4])
+          break if @current_row == inside_wall_row || @current_column == inside_wall_column
+        end
+      end
+      move(ROUTE[index])
+      break if @current_row == wall_row || @current_column == wall_column
+    end
+  end
+end
+
+
+maze = Maze.new(maze_map)
+
+path = SamplePath.new(maze_map)
+
+
+solution = path.find_path
 maze.verify_path!(solution)
 puts "Congratulations! Looks like you've found your way out!"
