@@ -247,24 +247,18 @@ class SamplePath
       if cell == WALL
         inside_wall_row = @current_row + OPTION[ROUTE[(index + 2) % 4]][0]
         inside_wall_column = @current_column + OPTION[ROUTE[(index + 2) % 4]][1]
-        @foooo = @foooo || inside_wall_row
-        @baaar = @baaar || inside_wall_column
         loop do
           inside_cell = move(ROUTE[(index + 3) % 4])
           # move(ROUTE[(index + 1) % 4])
           if inside_cell == WALL
             double_inside_wall_row = @current_row + OPTION[ROUTE[(index + 3) % 4]][0]
             double_inside_wall_column = @current_column + OPTION[ROUTE[(index + 3) % 4]][1]
-            @fooo = @fooo || double_inside_wall_row
-            @baar = @baar || double_inside_wall_column
             loop do
               double_inside_cell = move(ROUTE[(index + 4) % 4])
               # move(ROUTE[(index + 2) % 4])
               if double_inside_cell == WALL
                 thrice_inside_wall_row = @current_row + OPTION[ROUTE[(index + 4) % 4]][0]
                 thrice_inside_wall_column = @current_column + OPTION[ROUTE[(index + 4) % 4]][1]
-                @foo = @foo || thrice_inside_wall_row
-                @bar = @bar || thrice_inside_wall_column
                 loop do
                   thrice_inside_cell = move(ROUTE[(index + 5) % 4])
                   if thrice_inside_cell == OK
