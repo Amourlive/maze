@@ -158,7 +158,6 @@ end
 class SamplePath
   ROUTE = %i[down left up right].freeze
   OPTION = { down: [1, 0], left: [0, -1], up: [-1, 0], right: [0, 1] }.freeze
-  { up: [-1, 0], left: [0, -1], down: [1, 0], right: [0, 1] }.freeze
   OK = 0
   WALL = 1
   START = 2
@@ -191,7 +190,7 @@ class SamplePath
         get_round_wall(0) if cell == WALL
       end
     end
-    @sample_path
+    sort_direction
   end
 
   private
@@ -287,6 +286,21 @@ class SamplePath
       break if @current_row == wall_row || @current_column == wall_column
     end
   end
+
+  def sort_direction(arr = @sample_path)
+    i = 0
+    loop do
+      if ROUTE.find_index { |d| d == arr[i] } == ((ROUTE.find_index { |d| d == arr[i + 1] } + 2) % 4 )
+        arr.delete_at(i)
+        arr.delete_at(i)
+        i = 0
+      else
+        i += 1
+      end
+      break if i == (arr.length - 1)
+    end
+    arr
+  end
 end
 
 
@@ -296,5 +310,6 @@ path = SamplePath.new(maze_map)
 
 
 solution = path.find_path
+
 maze.verify_path!(solution)
 puts "Congratulations! Looks like you've found your way out!"
