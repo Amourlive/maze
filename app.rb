@@ -175,20 +175,20 @@ class SamplePath
       if @current_row < @target_row
         cell = move(:down)
         break if cell == TARGET
-        get_round_wall(:down) if cell == WALL
+        get_round_wall(3) if cell == WALL
       elsif @current_row > @target_row
         cell = move(:up)
         break if cell == TARGET
-        get_round_wall(:up) if cell == WALL
+        get_round_wall(1) if cell == WALL
       end
       if @current_column < @target_column
         cell = move(:right)
         break if cell == TARGET
-        get_round_wall(:right) if cell == WALL
+        get_round_wall(2) if cell == WALL
       elsif @current_column > @target_column
         cell = move(:left)
         break if cell == TARGET
-        get_round_wall(:left) if cell == WALL
+        get_round_wall(0) if cell == WALL
       end
     end
     @sample_path
@@ -238,59 +238,58 @@ class SamplePath
     end
   end
 
-  def get_round_wall(direction)
-    index = ROUTE.find_index { |i| i == direction }
-    wall_row = @current_row + OPTION[direction][0]
-    wall_column = @current_column + OPTION[direction][1]
+  def get_round_wall(index)
+    wall_row = @current_row + OPTION[ROUTE[(index + 1) % 4]][0]
+    wall_column = @current_column + OPTION[ROUTE[(index + 1) % 4]][1]
     loop do
-      cell = move(ROUTE[(index + 1) % 4])
+      cell = move(ROUTE[(index + 2) % 4])
       # move(ROUTE[index])
       if cell == WALL
-        inside_wall_row = @current_row + OPTION[ROUTE[(index + 1) % 4]][0]
-        inside_wall_column = @current_column + OPTION[ROUTE[(index + 1) % 4]][1]
+        inside_wall_row = @current_row + OPTION[ROUTE[(index + 2) % 4]][0]
+        inside_wall_column = @current_column + OPTION[ROUTE[(index + 2) % 4]][1]
         @foooo = @foooo || inside_wall_row
         @baaar = @baaar || inside_wall_column
         loop do
-          inside_cell = move(ROUTE[(index + 2) % 4])
+          inside_cell = move(ROUTE[(index + 3) % 4])
           # move(ROUTE[(index + 1) % 4])
           if inside_cell == WALL
-            double_inside_wall_row = @current_row + OPTION[ROUTE[(index + 2) % 4]][0]
-            double_inside_wall_column = @current_column + OPTION[ROUTE[(index + 2) % 4]][1]
+            double_inside_wall_row = @current_row + OPTION[ROUTE[(index + 3) % 4]][0]
+            double_inside_wall_column = @current_column + OPTION[ROUTE[(index + 3) % 4]][1]
             @fooo = @fooo || double_inside_wall_row
             @baar = @baar || double_inside_wall_column
             loop do
-              double_inside_cell = move(ROUTE[(index + 3) % 4])
+              double_inside_cell = move(ROUTE[(index + 4) % 4])
               # move(ROUTE[(index + 2) % 4])
               if double_inside_cell == WALL
-                thrice_inside_wall_row = @current_row + OPTION[ROUTE[(index + 3) % 4]][0]
-                thrice_inside_wall_column = @current_column + OPTION[ROUTE[(index + 3) % 4]][1]
+                thrice_inside_wall_row = @current_row + OPTION[ROUTE[(index + 4) % 4]][0]
+                thrice_inside_wall_column = @current_column + OPTION[ROUTE[(index + 4) % 4]][1]
                 @foo = @foo || thrice_inside_wall_row
                 @bar = @bar || thrice_inside_wall_column
                 loop do
-                  thrice_inside_cell = move(ROUTE[index])
+                  thrice_inside_cell = move(ROUTE[(index + 5) % 4])
                   if thrice_inside_cell == OK
-                    double_inside_wall_row += OPTION[ROUTE[index]][0]
-                    double_inside_wall_column += OPTION[ROUTE[index]][1]
+                    double_inside_wall_row += OPTION[ROUTE[(index + 5) % 4]][0]
+                    double_inside_wall_column += OPTION[ROUTE[(index + 5) % 4]][1]
                   end
-                  move(ROUTE[(index + 3) % 4])
+                  move(ROUTE[(index + 4) % 4])
                   break if @current_row == thrice_inside_wall_row || @current_column == thrice_inside_wall_column
                 end
               elsif double_inside_cell == OK
-                inside_wall_row += OPTION[ROUTE[(index + 3) % 4]][0]
-                inside_wall_column += OPTION[ROUTE[(index + 3) % 4]][1]
+                inside_wall_row += OPTION[ROUTE[(index + 4) % 4]][0]
+                inside_wall_column += OPTION[ROUTE[(index + 4) % 4]][1]
               end
-              move(ROUTE[(index + 2) % 4])
+              move(ROUTE[(index + 3) % 4])
               break if @current_row == double_inside_wall_row || @current_column == double_inside_wall_column
             end
           elsif inside_cell == OK
-            wall_row += OPTION[ROUTE[(index + 2) % 4]][0]
-            wall_column += OPTION[ROUTE[(index + 2) % 4]][1]
+            wall_row += OPTION[ROUTE[(index + 3) % 4]][0]
+            wall_column += OPTION[ROUTE[(index + 3) % 4]][1]
           end
-          move(ROUTE[(index + 1) % 4])
+          move(ROUTE[(index + 2) % 4])
           break if @current_row == inside_wall_row || @current_column == inside_wall_column
         end
       end
-      move(ROUTE[index])
+      move(ROUTE[(index + 1) % 4])
       break if @current_row == wall_row || @current_column == wall_column
     end
   end
