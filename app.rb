@@ -163,8 +163,10 @@ class SamplePath
   START = 2
   TARGET = 3
 
-  def initialize(maze_map)
-    @maze_array = parse_maze(maze_map)
+  def initialize(maze, start_row, start_column)
+    @maze = maze
+    @current_row = start_row
+    @current_column = start_column
     @sample_path = []
   end
 
@@ -195,26 +197,10 @@ class SamplePath
 
   private
 
-  def parse_maze(maze_map)
-    maze_map
-        .strip
-        .split("\n")
-        .map { |row|
-          row
-              .gsub(/▓/, WALL.to_s)
-              .gsub(' ', OK.to_s)
-              .gsub('A', START.to_s)
-              .gsub('B', TARGET.to_s)
-              .split(//)
-              .map(&:to_i)
-              .freeze
-        }.freeze
-  end
-
   def move(direction)
     next_row = @current_row + OPTION[direction][0]
     next_column = @current_column + OPTION[direction][1]
-    cell = @maze_array[next_row][next_column]
+    cell = @maze[next_row][next_column]
     return cell if cell == WALL
     @sample_path << direction
     @current_row = next_row
@@ -223,12 +209,7 @@ class SamplePath
   end
 
   def find_targets
-    @maze_array.each_with_index do |row, row_index|
-      cell_index = row.find_index { |value| value == START }
-      unless cell_index.nil?
-        @current_row = @start_row = row_index.freeze
-        @current_column = @start_column = cell_index.freeze
-      end
+    @maze.each_with_index do |row, row_index|
       cell_index = row.find_index { |value| value == TARGET }
       unless cell_index.nil?
         @target_row = row_index.freeze
@@ -306,7 +287,11 @@ end
 
 maze = Maze.new(maze_map)
 
-path = SamplePath.new(maze_map)
+path = SamplePath.new(
+    maze.instance_variable_get(:@maze),
+    maze.instance_variable_get(:@start_row),
+    maze.instance_variable_get(:@start_column)
+)
 
 
 solution = path.find_path
