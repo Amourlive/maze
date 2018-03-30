@@ -4,9 +4,9 @@ maze_map = %Q(
 ▓  ▓▓▓▓▓▓▓  ▓  ▓ ▓ ▓
 ▓  ▓   ▓   ▓▓▓ ▓ ▓ ▓
 ▓  ▓ A ▓   ▓ ▓ ▓ ▓ ▓
-▓  ▓   ▓B  ▓   ▓ ▓ ▓
+▓  ▓   ▓   ▓   ▓ ▓ ▓
 ▓▓ ▓   ▓▓▓▓▓ ▓▓▓ ▓▓▓
-▓                  ▓
+▓   B              ▓
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 )
 
@@ -183,6 +183,7 @@ class SymbolPath
       ROUTE.each_with_index do |direction, index|
         cell = value_at(current, direction)
         next if cell.class == String
+        next if cell.nil?
         if (sequent || (cell + 1)) > cell
           sequent = cell
           key = index
