@@ -172,6 +172,7 @@ class SymbolPath
 
   private
 
+  # record the path from the zero point to the target
   def write_path
     current = find_target('B')[0]
     target = find_target(0)[0]
@@ -195,6 +196,7 @@ class SymbolPath
     sample_path.reverse
   end
 
+  # fills the labyrinth the distance from the zero point
   def filling_maze
     distance = 0
     stop = nil
