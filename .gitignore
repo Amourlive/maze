@@ -105,3 +105,8 @@ fabric.properties
 .idea/httpRequests
 
 Будет удалено .idea/
+/.idea/vcs.xml
+Будет удалено .idea/inspectionProfiles/
+Будет удалено .idea/maze.iml
+Будет удалено .idea/misc.xml
+Будет удалено .idea/modules.xml
