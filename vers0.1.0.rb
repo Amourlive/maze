@@ -99,10 +99,3 @@ class SymbolPath
     end
   end
 end
-
-path = SymbolPath.new(MAZE_MAP)
-
-maze = Maze.new(MAZE_MAP)
-solution = path.find_path
-maze.verify_path!(solution)
-puts "Congratulations! Looks like you've found your way out!"
