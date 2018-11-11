@@ -15,12 +15,12 @@ class Matrix
 
   def [](row, column)
     handle_exception(row, column)
-    @store[convert_to_array_keys(row, column)]
+    @store[convert_to_array_key(row, column)]
   end
 
   def []=(row, column, obj)
     handle_exception(row, column)
-    @store[convert_to_array_keys(row, column)] = obj
+    @store[convert_to_array_key(row, column)] = obj
   end
 
   def each(&block)
@@ -77,7 +77,7 @@ class Matrix
     end
   end
 
-  def convert_to_array_keys(row, column)
+  def convert_to_array_key(row, column)
     @column_count * row + column
   end
 
