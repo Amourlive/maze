@@ -49,10 +49,12 @@ class Matrix
 
     store = @store.dup
     size = format_cell
-    puts_column_key(size)
+    line = ''
+    line << column_key_line(size)
     @row_count.times do |row|
-      puts_row(row, store, size)
+      line << row_line(row, store, size)
     end
+    print line
   end
 
   private
@@ -80,13 +82,13 @@ class Matrix
     @store.max { |a, b| a.to_s.length <=> b.to_s.length }.to_s.length + gap
   end
 
-  def puts_column_key(size)
-    print format("%#{size}s", '')
-    puts((0...@column_count).map { |key| format("%#{size}s", key) }.join)
+  def column_key_line(size)
+    "#{format("%#{size}s", '') +
+    (0...@column_count).map { |key| format("%#{size}s", key) }.join}\n"
   end
 
-  def puts_row(row_key, row, size)
-    print format("%#{size}s", row_key)
-    puts(row.shift(@column_count).map { |cell| format("%#{size}s", cell) }.join)
+  def row_line(row_key, row, size)
+    "#{format("%#{size}s", row_key) +
+    row.shift(@column_count).map { |cell| format("%#{size}s", cell) }.join}\n"
   end
 end
