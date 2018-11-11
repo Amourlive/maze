@@ -57,6 +57,14 @@ class Matrix
     print line
   end
 
+  def first
+    @store.first
+  end
+
+  def last
+    @store.last
+  end
+
   private
 
   def create_store(row, column, obj, &block)
