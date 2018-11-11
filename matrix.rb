@@ -74,7 +74,7 @@ class Matrix
   end
 
   def handle_exception(row, column)
-    raise ArgumentError, 'Argument is not integer' unless
+    raise TypeError, 'Argument is not integer' unless
         row.is_a?(Integer) && column.is_a?(Integer)
   end
 
