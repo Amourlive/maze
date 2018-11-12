@@ -6,7 +6,7 @@
 #
 class Matrix
   def initialize(row, column, obj = nil, &block)
-    handle_exception(row, column)
+    handle_exception_type(row, column)
 
     @row_count = row
     @column_count = column
@@ -14,12 +14,14 @@ class Matrix
   end
 
   def [](row, column)
-    handle_exception(row, column)
+    handle_exception_type(row, column)
+    handle_exception_argument(row, column)
     @store[convert_to_array_key(row, column)]
   end
 
   def []=(row, column, obj)
-    handle_exception(row, column)
+    handle_exception_type(row, column)
+    handle_exception_argument(row, column)
     @store[convert_to_array_key(row, column)] = obj
   end
 
@@ -81,9 +83,16 @@ class Matrix
     @column_count * row + column
   end
 
-  def handle_exception(row, column)
-    raise TypeError, 'Argument is not integer' unless
-        row.is_a?(Integer) && column.is_a?(Integer)
+  def handle_exception_type(row, column)
+    return if row.is_a?(Integer) && column.is_a?(Integer)
+
+    type = row.is_a?(Integer) ? column.class : row.class
+    raise TypeError, "no implicit conversion of #{type} into Integer"
+  end
+
+  def handle_exception_argument(row, column)
+    raise ArgumentError, 'Matrix index is out of range' unless
+      row > @row_count && column > @column_count
   end
 
   def format_cell(gap = 1)
