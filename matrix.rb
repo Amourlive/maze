@@ -91,8 +91,8 @@ class Matrix
   end
 
   def handle_exception_argument(row, column)
-    raise ArgumentError, 'Matrix index is out of range' unless
-      row > @row_count && column > @column_count
+    raise ArgumentError, 'Matrix index is out of range' if
+      row >= @row_count && column >= @column_count
   end
 
   def format_cell(gap = 1)
