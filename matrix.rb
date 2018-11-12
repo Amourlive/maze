@@ -26,11 +26,15 @@ class Matrix
   end
 
   def each(&block)
+    raise LocalJumpError, 'no block given (yield)' unless block_given?
+
     @store.each(&block)
     self
   end
 
   def map(&block)
+    raise LocalJumpError, 'no block given (yield)' unless block_given?
+
     Matrix.new(@row_count, @column_count, @store.map(&block))
   end
 
