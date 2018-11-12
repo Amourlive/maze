@@ -38,6 +38,13 @@ class Matrix
     Matrix.new(@row_count, @column_count, @store.map(&block))
   end
 
+  def index(obj = true, &block)
+    key = obj.equal?(true) ? @store.index(&block) : @store.index(obj)
+    return nil unless key
+
+    convert_to_matrix_key(key)
+  end
+
   def size
     { row: @row_count, column: @column_count }
   end
@@ -74,7 +81,7 @@ class Matrix
   private
 
   def create_store(row, column, obj, &block)
-    if obj.nil?
+    if block_given?
       Array.new(row * column, &block)
     elsif obj.is_a?(Array) && obj.size == (row * column)
       obj
