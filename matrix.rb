@@ -87,6 +87,12 @@ class Matrix
     @column_count * row + column
   end
 
+  def convert_to_matrix_key(key)
+    row = key / @column_count
+    column = key % @column_count
+    [row, column]
+  end
+
   def handle_exception_type(row, column)
     return if row.is_a?(Integer) && column.is_a?(Integer)
 
