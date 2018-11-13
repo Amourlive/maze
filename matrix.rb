@@ -13,8 +13,6 @@ class Matrix
     @store = create_store(row, column, obj, &block)
   end
 
-  alias find_index index
-
   def [](row, column)
     handle_exception_type(row, column)
     handle_exception_argument(row, column)
@@ -127,4 +125,5 @@ class Matrix
     "#{format("%#{size}s", row_key) +
     row.shift(@column_count).map { |cell| format("%#{size}s", cell) }.join}\n"
   end
+  alias find_index index
 end
