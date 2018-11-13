@@ -13,6 +13,8 @@ class Matrix
     @store = create_store(row, column, obj, &block)
   end
 
+  alias find_index index
+
   def [](row, column)
     handle_exception_type(row, column)
     handle_exception_argument(row, column)
