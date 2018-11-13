@@ -45,6 +45,7 @@ class MazePath
       mark!(map, index, distance, stop)
       distance += 1
       break if stop == '1'
+      raise 'Maze is not have solutions' if distance >= @stop
     end
   end
 
@@ -118,6 +119,7 @@ class MazePath
     column_count = (obj.size - row_count + n) / row_count
     array = obj.chars
     array.delete("\n")
+    @stop = array.size
     Matrix.new(row_count, column_count, array)
   end
 
