@@ -1,8 +1,9 @@
 # Исходник задачи с собеседования
 # https://gist.github.com/ro31337/d1e7ae677a4d52f60552e6af898df703
 # Ограничения на решение - 2 часа времени.
+require_relative 'maze_path'
 
-MAZE_MAP = %Q(
+maze_map = %Q(
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▓              ▓   ▓
 ▓  ▓▓▓▓▓▓▓  ▓  ▓ ▓ ▓
@@ -12,6 +13,26 @@ MAZE_MAP = %Q(
 ▓▓ ▓   ▓▓▓▓▓ ▓▓▓ ▓▓▓
 ▓                  ▓
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+)
+
+maze_map_big = %Q(
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓                            ▓ ▓   ▓   ▓
+▓  ▓▓▓▓▓▓▓  ▓      ▓     ▓ ▓▓▓ ▓ ▓ ▓ ▓ ▓
+▓  ▓   ▓   ▓▓▓     ▓     ▓   ▓ ▓ ▓ ▓ ▓ ▓
+▓  ▓ A ▓   ▓ ▓     ▓     ▓ ▓▓▓ ▓ ▓ ▓ ▓ ▓
+▓  ▓   ▓   ▓       ▓     ▓  ▓    ▓ ▓ ▓B▓
+▓▓ ▓   ▓▓▓▓▓       ▓     ▓▓ ▓ ▓▓▓▓▓▓ ▓▓▓
+▓                  ▓     ▓             ▓
+▓▓▓▓▓▓             ▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓              ▓   ▓ ▓                 ▓
+▓  ▓▓▓▓▓▓▓  ▓  ▓ ▓ ▓ ▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓
+▓  ▓   ▓   ▓▓▓ ▓ ▓ ▓ ▓ ▓             ▓ ▓
+▓  ▓   ▓   ▓ ▓ ▓ ▓ ▓ ▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓ ▓
+▓  ▓   ▓   ▓   ▓ ▓ ▓ ▓               ▓ ▓
+▓▓ ▓   ▓▓▓▓▓ ▓▓▓ ▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓
+▓                  ▓                   ▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 )
 
 sample_path = %i(down   down   down  right
@@ -154,3 +175,10 @@ class Maze
     puts "\e[H\e[2J"
   end
 end
+
+maze = Maze.new(maze_map)
+map = MazePath.new(maze_map)
+solution = map.path
+
+maze.verify_path!(solution)
+puts "Congratulations! Looks like you've found your way out!"
